@@ -64,10 +64,12 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
-
+  'mfussenegger/nvim-dap',
+  'rcarriga/nvim-dap-ui',
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
+  'lewis6991/gitsigns.nvim',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -144,7 +146,7 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'onedark',
         component_separators = '|',
         section_separators = '',
@@ -518,6 +520,13 @@ cmp.setup {
   },
 }
 
+local mason_registry = require("mason-registry")
+
+local codelldb = mason_registry.get_package("codelldb")
+local extension_path = codelldb:get_install_path() .. "/extension/"
+local codelldb_path = extension_path .. "adapter/codelldb"
+local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
+
 local opts = {
   tools = { -- rust-tools options
 
@@ -593,7 +602,7 @@ local opts = {
 
       -- whether the hover action window gets automatically focused
       -- default: false
-      auto_focus = false,
+      auto_focus = true,
     },
 
     -- settings for showing the crate graph based on graphviz and the dot
@@ -685,17 +694,37 @@ local opts = {
 
   -- debugging stuff
   dap = {
-    adapter = {
-      type = "executable",
-      command = "lldb-vscode",
-      name = "rt_lldb",
-    },
+    adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+    --adapter = {
+    --  type = "executable",
+    --  command = "lldb-vscode",
+    --  name = "rt_lldb",
+    --},
   },
 }
 
 require('rust-tools').setup(opts)
 
 require('crates').setup()
+require('gitsigns').setup()
+
+require("dapui").setup()
+
+local dap, dapui = require("dap"), require("dapui")
+
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+  dapui.close()
+end
+
+vim.keymap.set("n", "<Leader>dt", ':DapToggleBreakpoint<CR>')
+vim.keymap.set("n", "<Leader>dx", ':DapTerminate<CR>')
+vim.keymap.set("n", "<Leader>do", ':DapStepOver<CR>')
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`
