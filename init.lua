@@ -70,6 +70,8 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   'lewis6991/gitsigns.nvim',
+  'sindrets/diffview.nvim',
+  'MunifTanjim/nui.nvim',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
