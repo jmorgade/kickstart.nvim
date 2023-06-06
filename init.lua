@@ -64,6 +64,13 @@ vim.opt.rtp:prepend(lazypath)
 --    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
+  {
+    'rust-lang/rust.vim',
+     ft = "rust",
+    init = function()
+      vim.g.rustfmt_autosave = 1
+    end
+  },
   'mfussenegger/nvim-dap',
   'rcarriga/nvim-dap-ui',
   -- Git related plugins
