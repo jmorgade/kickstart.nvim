@@ -81,5 +81,86 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+
+    -- configure the adapter for Rust Debugging
+    -- dap.configurations.rust = {
+    --   {
+    --     name = 'Launch Debug',
+    --     type = 'lldb',
+    --     request = "launch",
+    --     program = function()
+    --       return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/' .. '')
+    --     end,
+    --     cwd = '${workspaceFolder}',
+    --     stopOnEntry = false,
+    --     args = {},
+    --     initCommand = {},
+    --     runInTerminal = false
+    --   }
+    -- }
+
+    --require("dap").adapters.lldb = {
+    --  type = "executable",
+    --  command = "/usr/bin/lldb-vscode", -- adjust as needed
+    --  name = "lldb",
+    --}
+
+    --local lldb = {
+    --  name = "Launch lldb",
+    --  type = "lldb",      -- matches the adapter
+    --  request = "launch", -- could also attach to a currently running process
+    --  program = function()
+    --    --return vim.fn.input(
+    --    --  "Path to executable: ",
+    --    --  vim.fn.getcwd() .. "/",
+    --    --  "file"
+    --    --)
+    --    return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/' .. '')
+    --  end,
+    --  cwd = "${workspaceFolder}",
+    --  stopOnEntry = false,
+    --  args = {},
+    --  runInTerminal = false,
+    --}
+
+    --require('dap').configurations.rust = {
+    --  lldb -- different debuggers or more configurations can be used here
+    --}
+    --
+
+    local mason_registry = require("mason-registry")
+
+    local codelldb = mason_registry.get_package("codelldb")
+    local extension_path = codelldb:get_install_path() .. "/extension/"
+    local codelldb_path = extension_path .. "adapter/codelldb"
+    local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
+
+    require('dap').adapters.codelldb = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
+
+
+    require('dap').configurations.rust = {
+      {
+        name = 'Debug',
+        type = 'codelldb',
+        request = 'launch',
+        program = function()
+          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        terminal = 'integrated',
+        sourceLanguages = { 'rust' }
+      },
+      --      {
+      --        name = 'Release',
+      --        type = 'codelldb',
+      --        request = 'launch',
+      --        program = function()
+      --          return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+      --        end,
+      --        cwd = '${workspaceFolder}',
+      --        terminal = 'integrated',
+      --        sourceLanguages = { 'rust' }
+      --      }
+    }
   end,
 }

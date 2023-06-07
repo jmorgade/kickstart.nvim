@@ -62,18 +62,18 @@ vim.opt.rtp:prepend(lazypath)
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
- -- local mason_registry = require("mason-registry")
- -- 
- -- local codelldb = mason_registry.get_package("codelldb")
- -- local extension_path = codelldb:get_install_path() .. "/extension/"
- -- local codelldb_path = extension_path .. "adapter/codelldb"
- -- local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
- 
+-- local mason_registry = require("mason-registry")
+--
+-- local codelldb = mason_registry.get_package("codelldb")
+-- local extension_path = codelldb:get_install_path() .. "/extension/"
+-- local codelldb_path = extension_path .. "adapter/codelldb"
+-- local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
+
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
- {
+  {
     'rust-lang/rust.vim',
-     ft = "rust",
+    ft = "rust",
     init = function()
       vim.g.rustfmt_autosave = 1
     end
@@ -81,7 +81,8 @@ require('lazy').setup({
   "Saecki/crates.nvim",
   {
     'simrat39/rust-tools.nvim',
-    dependencies = {'nvim-lua/popup.nvim','nvim-lua/plenary.nvim','nvim-telescope/telescope.nvim','mfussenegger/nvim-dap'},
+    dependencies = { 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim',
+      'mfussenegger/nvim-dap' },
     --dap = {
     --  adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
     --}
@@ -110,7 +111,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -134,7 +135,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -148,7 +149,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -190,7 +192,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -455,28 +457,28 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   rust_analyzer = {
-           ["rust-analyzer"] = {
-            imports = {
-                granularity = {
-                    group = "module",
-                },
-                prefix = "self",
-            },
-            cargo = {
-                buildScripts = {
-                    enable = true,
-                },
-            },
-            procMacro = {
-                enable = true
-            },
-        }
+    ["rust-analyzer"] = {
+      imports = {
+        granularity = {
+          group = "module",
+        },
+        prefix = "self",
+      },
+      cargo = {
+        buildScripts = {
+          enable = true,
+        },
+      },
+      procMacro = {
+        enable = true
+      },
+    }
     --['rust-analyzer'] = {
     --  cargo = {
-     --   allFeatures = true,
-      --}
+    --   allFeatures = true,
     --}
---root_dir = util.root_pattern("Cargo.toml")
+    --}
+    --root_dir = util.root_pattern("Cargo.toml")
   },
   -- tsserver = {},
 
@@ -747,13 +749,13 @@ cmp.setup {
 --
 --require('rust-tools').setup(opts)
 
--- require('crates').setup()
+require('crates').setup()
 -- require('gitsigns').setup()
--- 
+--
 -- require("dapui").setup()
--- 
+--
 -- local dap, dapui = require("dap"), require("dapui")
--- 
+--
 -- dap.listeners.after.event_initialized["dapui_config"] = function()
 --   dapui.open()
 -- end
@@ -763,7 +765,7 @@ cmp.setup {
 -- dap.listeners.before.event_exited["dapui_config"] = function()
 --   dapui.close()
 -- end
--- 
+--
 -- vim.keymap.set("n", "<Leader>dt", ':DapToggleBreakpoint<CR>')
 -- vim.keymap.set("n", "<Leader>dx", ':DapTerminate<CR>')
 -- vim.keymap.set("n", "<Leader>do", ':DapStepOver<CR>')
