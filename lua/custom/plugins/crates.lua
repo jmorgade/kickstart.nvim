@@ -1,3 +1,3 @@
 return {
-  "Saecki/crates.nvim"
+--  "Saecki/crates.nvim"
 }
