@@ -78,23 +78,26 @@ require('lazy').setup({
       vim.g.rustfmt_autosave = 1
     end
   },
+  'ryanoasis/vim-devicons',
   "Saecki/crates.nvim",
   'weilbith/nvim-code-action-menu',
   {
     'simrat39/rust-tools.nvim',
     dependencies = { 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim',
       'mfussenegger/nvim-dap' },
-    --opts = {
-    --  tools = {
-    --    autoSetHints = true,
-    --    hover_with_actions = true,
-    --    inlay_hints = {
-    --      show_parameter_hints = false,
-    --      parameter_hints_prefix = "",
-    --      other_hints_prefix = "",
-    --    }
-    --  },
-    --}
+    opts = {
+      tools = {
+        runnables = {
+          use_telescope = true,
+        },
+        inlay_hints = {
+          auto = true,
+          --show_parameter_hints = false,
+          --parameter_hints_prefix = "",
+          --other_hints_prefix = "",
+        }
+      },
+    }
     --dap = {
     --  adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
     --}
@@ -118,7 +121,7 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
+      { 'williamboman/mason.nvim', config = true, opts = { ensure_installed = { "pyright", } } },
       'williamboman/mason-lspconfig.nvim',
 
       -- Useful status updates for LSP
@@ -485,6 +488,9 @@ local servers = {
       procMacro = {
         enable = true
       },
+      checkOnSave = {
+        command = "clippy"
+      },
     }
     --['rust-analyzer'] = {
     --  cargo = {
@@ -577,6 +583,6 @@ cmp.setup {
 
 require('crates').setup()
 vim.keymap.set("n", '<Leader>ca', ':CodeActionMenu<CR>')
-
+--vim.api.nvim_buf_set_option('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>' { noremap=true, silent=true })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
