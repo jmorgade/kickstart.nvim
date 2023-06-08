@@ -135,6 +135,11 @@ return {
     local codelldb_path = extension_path .. "adapter/codelldb"
     local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
 
+    if (vim.loop.os_uname().sysname == "Darwin")
+    then
+      liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
+    end
+
     require('dap').adapters.codelldb = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
 
 
